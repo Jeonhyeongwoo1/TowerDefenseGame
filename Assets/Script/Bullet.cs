@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     private Transform target;
     public float speed = 70f;
+    public int damage = 50;
     public float explosionRadius = 0f;
     public GameObject impactEffect;
 
@@ -13,7 +14,6 @@ public class Bullet : MonoBehaviour
     public void Seek(Transform _target)
     {
         target = _target;
-
     }
 
     // Start is called before the first frame update
@@ -37,17 +37,18 @@ public class Bullet : MonoBehaviour
         {
             HitTarget();
             return;
-              
         }
 
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
         transform.LookAt(target);
     }
 
+    
+
     void HitTarget()
     {
         GameObject effectIns = (GameObject) Instantiate(impactEffect, transform.position, transform.rotation);
-        Destroy(effectIns, 3f);
+        Destroy(effectIns, 1f);
 
         if(explosionRadius > 0f) 
         {
@@ -58,8 +59,22 @@ public class Bullet : MonoBehaviour
             Damage(target);    
         }
 
-        Destroy(target.gameObject);
+        Destroy(gameObject);
+    }
 
+    bool HitEnemy()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "Enemy")
+            {
+                Debug.Log("Hit Enemy");
+                return true; 
+            }
+        }
+
+        return false;
     }
 
     void Explode()
@@ -69,7 +84,7 @@ public class Bullet : MonoBehaviour
         {
             if(collider.tag == "Enemy")
             {
-                print(collider.name);
+                print("Collider Name : " + collider.name);
                 Damage(collider.transform);
             }
         }
@@ -77,7 +92,11 @@ public class Bullet : MonoBehaviour
 
     void Damage(Transform enemy)
     {
-        Destroy(enemy.gameObject);
+        Enemy e = enemy.GetComponent<Enemy>();
+        if(e != null)
+        {
+            e.TakeDamage(damage);
+        }
     }
 
     /// <summary>

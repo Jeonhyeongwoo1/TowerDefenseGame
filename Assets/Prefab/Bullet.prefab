@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3654200158205656253}
   - component: {fileID: 3654200158205656252}
   - component: {fileID: 3654200158205656255}
-  - component: {fileID: 367100271582904245}
+  - component: {fileID: 8816523826404971440}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -82,7 +82,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &367100271582904245
+--- !u!114 &8816523826404971440
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,5 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c0298ac4a64cc4e8c4c891fe42ae50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 70
+  speed: 20
+  damage: 50
+  explosionRadius: 0
   impactEffect: {fileID: 2389449120251885361, guid: c78bfeeb1f3ad7c4e8f7c28d5cb61df1, type: 3}

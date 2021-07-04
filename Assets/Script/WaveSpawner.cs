@@ -13,7 +13,7 @@ public class WaveSpawner : MonoBehaviour
 
     public Text waveCountdownText;
 
-    private int waveNumber = 1;
+    private int waveNumber = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -32,8 +32,9 @@ public class WaveSpawner : MonoBehaviour
         }
 
         countdown -= Time.deltaTime;
-        waveCountdownText.text = Mathf.Round(countdown).ToString();
-
+        countdown = Mathf.Clamp(countdown, 0, Mathf.Infinity);
+        waveCountdownText.text = string.Format("{0:00.00}", countdown);
+        
     }
 
     void SpawnEnemy()

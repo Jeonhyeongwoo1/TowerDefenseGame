@@ -9,9 +9,13 @@ public class Node : MonoBehaviour
     public Vector3 positionOffset;
 
     public Color hoverColor;
+    public Color notEnoughMoneyColor;
+
     private Renderer rend;
     private Color startColor;
-    private GameObject turret;
+
+    [Header("Optional")]
+    public GameObject turret;
 
     /// <summary>
     /// Called when the mouse enters the GUIElement or Collider.
@@ -22,28 +26,40 @@ public class Node : MonoBehaviour
         {
             return;
         }
-        if (buildManager.GetTurretToBuild() == null) { return; }
-        
-        rend.material.color = hoverColor;
+
+        if (!buildManager.CanBuild) { return; }
+
+        if (buildManager.HasMoney)
+        {
+            rend.material.color = hoverColor;
+        }
+        else
+        {
+            rend.material.color = notEnoughMoneyColor;
+        }
+
     }
 
+    public Vector3 GetBuildPosition()
+    {
+        return transform.position + positionOffset;
+    }
     /// <summary>
     /// OnMouseDown is called when the user has pressed the mouse button while
     /// over the GUIElement or Collider.
     /// </summary>
     void OnMouseDown()
     {
-        if (buildManager.GetTurretToBuild() == null) { return; }
+        if (EventSystem.current.IsPointerOverGameObject()) { return; }
+        if (!buildManager.CanBuild) { return; }
 
         if(turret != null)
         {
             print("Can't build there! - TODO : Display on screen");
             return;
-        }    
-
+        }
         //Build a turret
-        GameObject turretToBuild = BuildManager.instance.GetTurretToBuild();
-        turret = (GameObject) Instantiate(turretToBuild, transform.position + positionOffset, transform.rotation);
+        buildManager.BuildTurretOn(this);
 
     }
 
