@@ -5,14 +5,24 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float health = 100f;
-    public float speed = 10f;
-    public float distance = 0.5f;
-    public int value = 50;
+    public int worth = 50;
     public GameObject deathEffect; 
-    private Transform target;
-    private int wavePointIndex = 0;
+    public float startSpeed = 10f;
+    public float distance = 0.4f;
     
-    public void TakeDamage(int amount)
+    [HideInInspector]
+    public float speed = 10f;
+
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        speed = startSpeed;
+    }
+
+    public void TakeDamage(float amount)
     {
         health -= amount;
         if(health <= 0f)
@@ -21,49 +31,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void Slow(float amount)
+    {
+        speed  = startSpeed * (1f - amount);    
+    }
+
     void Die()
     {
-        PlayerStats.money += value;
+        PlayerStats.money += worth;
         
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
         Destroy(effect, 3f);
         Destroy(gameObject);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        target = WayPoints.points[0];
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 dir = target.position - transform.position;
-        transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
-
-        if (Vector3.Distance(transform.position, target.position) <= distance)
-        {
-            GetNextWayPoint();
-        }
-    }
-
-    void GetNextWayPoint()
-    {
-        if (wavePointIndex >= WayPoints.points.Length - 1)
-        {
-            EndPath();
-            return;
-        }
-
-        wavePointIndex++;
-        target = WayPoints.points[wavePointIndex];
-    }
-
-    void EndPath()
-    {
-        PlayerStats.lives--;
-        Destroy(gameObject);
-    }
 }
 

@@ -7,7 +7,8 @@ public class BuildManager : MonoBehaviour
     public static BuildManager instance;
     public GameObject standardTurretPrefab;
     public GameObject missileLauncherPrefab;
-    
+    public GameObject laserBeamerPrefab;
+
     public TurretBlueprint turretToBuild;
     public GameObject buildEffect;
     public bool CanBuild { get { return turretToBuild.prefab != null; } }
