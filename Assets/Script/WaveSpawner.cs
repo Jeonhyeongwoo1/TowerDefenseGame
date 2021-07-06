@@ -46,6 +46,8 @@ public class WaveSpawner : MonoBehaviour
     {
         print("Wave Incoming!");
         waveNumber++;
+        PlayerStats.rounds++;
+        
         for (var i = 0; i < waveNumber; i++)
         {
             SpawnEnemy();

@@ -14,15 +14,21 @@ public class Node : MonoBehaviour
     private Renderer rend;
     private Color startColor;
 
-    [Header("Optional")]
+    [HideInInspector]
     public GameObject turret;
+
+    [HideInInspector]
+    public TurretBlueprint turretBlueprint;
+    
+    [HideInInspector]
+    public bool isUpgraded = false;
 
     /// <summary>
     /// Called when the mouse enters the GUIElement or Collider.
     /// </summary>
     void OnMouseEnter()
     {
-        if(EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }
@@ -40,6 +46,26 @@ public class Node : MonoBehaviour
 
     }
 
+    void BuildTurret(TurretBlueprint blueprint)
+    {
+        if (PlayerStats.money < blueprint.cost)
+        {
+            Debug.Log("Not enugh Money to Build That!");
+            return;
+        }
+
+        PlayerStats.money -= blueprint.cost;
+
+        GameObject _turret = Instantiate(blueprint.prefab, GetBuildPosition(), Quaternion.identity);
+        turret = _turret;
+        turretBlueprint = blueprint;
+
+        GameObject effect = Instantiate(buildManager.buildEffect, GetBuildPosition(), Quaternion.identity);
+        Destroy(effect, 5f);
+
+        Debug.Log("Turret build Money Left : " + PlayerStats.money);
+    }
+
     public Vector3 GetBuildPosition()
     {
         return transform.position + positionOffset;
@@ -51,17 +77,45 @@ public class Node : MonoBehaviour
     void OnMouseDown()
     {
         if (EventSystem.current.IsPointerOverGameObject()) { return; }
-        if (!buildManager.CanBuild) { return; }
 
-        if(turret != null)
+        if (turret != null)
         {
-            print("Can't build there! - TODO : Display on screen");
+            buildManager.SelectNode(this);
             return;
         }
+
+        if (!buildManager.CanBuild) { return; }
+
         //Build a turret
-        buildManager.BuildTurretOn(this);
+        BuildTurret(buildManager.GetTurretToBuild());
 
     }
+
+    public void UpgradeTurret()
+    {
+        if (PlayerStats.money < turretBlueprint.upgradeCost)
+        {
+            Debug.Log("Not enugh Money to Build That!");
+            return;
+        }
+
+        PlayerStats.money -= turretBlueprint.upgradeCost;
+
+        // Get rid of the old turret    
+        Destroy(turret);
+
+        //build a new one
+        GameObject _turret = Instantiate(turretBlueprint.upgradedPrefab, GetBuildPosition(), Quaternion.identity);
+        turret = _turret;
+
+        GameObject effect = Instantiate(buildManager.buildEffect, GetBuildPosition(), Quaternion.identity);
+        Destroy(effect, 5f);
+
+        isUpgraded = true;
+
+        Debug.Log("Turret build Money Left : " + PlayerStats.money);
+    }
+
 
     /// <summary>
     /// Called when the mouse is not any longer over the GUIElement or Collider.
@@ -82,6 +136,6 @@ public class Node : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

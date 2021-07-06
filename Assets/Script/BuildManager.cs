@@ -8,29 +8,31 @@ public class BuildManager : MonoBehaviour
     public GameObject standardTurretPrefab;
     public GameObject missileLauncherPrefab;
     public GameObject laserBeamerPrefab;
+    public NodeUI nodeUI;
 
-    public TurretBlueprint turretToBuild;
+    private TurretBlueprint turretToBuild;
     public GameObject buildEffect;
-    public bool CanBuild { get { return turretToBuild.prefab != null; } }
+    public bool CanBuild
+    {
+        get
+        {
+            if (turretToBuild != null)
+            {
+                return turretToBuild.prefab != null;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
     public bool HasMoney { get { return PlayerStats.money >= turretToBuild.cost; } }
+
+    private Node selectedNode;
 
     public void BuildTurretOn(Node node)
     {
-        if(PlayerStats.money < turretToBuild.cost)
-        {
-            Debug.Log("Not enugh Money to Build That!");
-            return;
-        }
-
-        PlayerStats.money -= turretToBuild.cost;
-
-        GameObject turret =  Instantiate(turretToBuild.prefab, node.GetBuildPosition(), Quaternion.identity);
-        node.turret = turret;
-
-        GameObject effect = Instantiate(buildEffect, node.GetBuildPosition(), Quaternion.identity);
-        Destroy(effect, 5f);
-        
-        Debug.Log("Turret build Money Left : " + PlayerStats.money);
+       
     }
 
     /// <summary>
@@ -45,12 +47,33 @@ public class BuildManager : MonoBehaviour
         }
         instance = this;
     }
-    
+
+    public void SelectNode(Node node)
+    {
+        if (selectedNode == node)
+        {
+            DeselectNode();
+            return;
+        }
+
+        selectedNode = node;
+        turretToBuild = null;
+
+        nodeUI.SetTarget(node);
+    }
+
+    public void DeselectNode()
+    {
+        selectedNode = null;
+        nodeUI.Hide();
+    }
+
     public void SelectTurretToBuild(TurretBlueprint turret)
     {
         turretToBuild = turret;
+        DeselectNode();
     }
-    
+
     public TurretBlueprint GetTurretToBuild()
     {
         return turretToBuild;
