@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    public float health = 100f;
+    public float startHealth = 200f;
     public int worth = 50;
     public GameObject deathEffect; 
     public float startSpeed = 10f;
@@ -13,6 +14,11 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public float speed = 10f;
 
+    [Header("Unity Stuff")]
+    public Image healthBar;
+
+    private float health;
+
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -20,11 +26,14 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         speed = startSpeed;
+        health = startHealth;
     }
 
     public void TakeDamage(float amount)
     {
         health -= amount;
+        healthBar.fillAmount = health / 200f;
+
         if(health <= 0f)
         {
             Die();
@@ -43,6 +52,7 @@ public class Enemy : MonoBehaviour
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
         Destroy(effect, 3f);
         Destroy(gameObject);
+        WaveSpawner.EnemiesAlive--;
     }
 
 }

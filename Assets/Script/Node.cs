@@ -116,6 +116,17 @@ public class Node : MonoBehaviour
         Debug.Log("Turret build Money Left : " + PlayerStats.money);
     }
 
+    public void SellTurret()
+    {
+        PlayerStats.money += turretBlueprint.GetSellAmout();
+
+        //Spawn a cool effect
+        GameObject effect = Instantiate(buildManager.sellEffect, GetBuildPosition() + new Vector3(0, 2f, 0), Quaternion.identity);
+        Destroy(effect, 5f);
+        Destroy(turret);
+        turretBlueprint = null;
+    }
+
 
     /// <summary>
     /// Called when the mouse is not any longer over the GUIElement or Collider.

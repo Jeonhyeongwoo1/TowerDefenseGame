@@ -12,6 +12,7 @@ public class BuildManager : MonoBehaviour
 
     private TurretBlueprint turretToBuild;
     public GameObject buildEffect;
+    public GameObject sellEffect;
     public bool CanBuild
     {
         get

@@ -1,34 +1,36 @@
 using System.Collections;
-using System.Collections.Generic;
+ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
-    public Transform enemyPrefab;
+    public static int EnemiesAlive = 0;
     public Transform spwanPoint;
-
     public float timeBetweenWaves = 5f;
-    private float countdown = 2f;
-
     public Text waveCountdownText;
 
-    private int waveNumber = 0;
+    public Wave[] waves;
+
+    private int waveIndex = 0;
+    private float countdown = 2f;
 
     // Start is called before the first frame update
     void Start()
     {
-
+ 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (EnemiesAlive > 0) { return; }
+
         if (countdown <= 0f)
         {
             StartCoroutine(SpawnWave());
             countdown = timeBetweenWaves;
-
+            return;
         }
 
         countdown -= Time.deltaTime;
@@ -37,21 +39,30 @@ public class WaveSpawner : MonoBehaviour
         
     }
 
-    void SpawnEnemy()
+    void SpawnEnemy(GameObject enemy)
     {
-        Instantiate(enemyPrefab, spwanPoint.position, spwanPoint.rotation);
+        Instantiate(enemy, spwanPoint.position, spwanPoint.rotation);
+        EnemiesAlive++;
     }
 
     IEnumerator SpawnWave()
     {
         print("Wave Incoming!");
-        waveNumber++;
         PlayerStats.rounds++;
-        
-        for (var i = 0; i < waveNumber; i++)
+        Wave wave = waves[waveIndex];
+
+        for (var i = 0; i < wave.count; i++)
         {
-            SpawnEnemy();
-            yield return new WaitForSeconds(0.5f);
+            SpawnEnemy(wave.enemy);
+            yield return new WaitForSeconds(1f / wave.rate);
         }
+        waveIndex++;
+
+        if(waveIndex == waves.Length)
+        {
+            Debug.Log("Level won !");
+            this.enabled = false;
+        }
+        
     }
 }
