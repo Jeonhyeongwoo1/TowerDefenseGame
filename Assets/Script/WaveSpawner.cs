@@ -18,7 +18,15 @@ public class WaveSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
- 
+
+    }
+
+    /// <summary>
+    /// This function is called when the object becomes enabled and active.
+    /// </summary>
+    void OnEnable()
+    {
+        EnemiesAlive = 0;
     }
 
     // Update is called once per frame

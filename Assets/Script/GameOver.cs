@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameOver : MonoBehaviour
 {
     public Text roundText;
-
+    public SceneFader sceneFader;
+    string mainMenu = "mainMenu";
     /// <summary>
     /// This function is called when the object becomes enabled and active.
     /// </summary>
@@ -18,12 +19,13 @@ public class GameOver : MonoBehaviour
 
     public void Retry()
     {
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void Menu()
     {
         Debug.Log("Go to Menu");
+        sceneFader.ChangeScene(mainMenu);
     }
 
     // Start is called before the first frame update

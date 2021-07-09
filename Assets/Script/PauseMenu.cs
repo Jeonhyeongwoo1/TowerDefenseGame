@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject UI;
+    public SceneFader sceneFader;
+    
+    string menuSceneName = "MainMenu";
+    //string retryScene = "";
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
@@ -41,6 +45,7 @@ public class PauseMenu : MonoBehaviour
     public void Menu()
     {
         Debug.Log("Go to Menu");
+        sceneFader.ChangeScene(menuSceneName);
     }
 
 }
