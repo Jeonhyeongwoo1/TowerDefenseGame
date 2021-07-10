@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     public Image healthBar;
 
     private float health;
-
+    private bool isDead = false;
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
         health -= amount;
         healthBar.fillAmount = health / 200f;
 
-        if(health <= 0f)
+        if(health <= 0f && !isDead)
         {
             Die();
         }
@@ -47,6 +47,7 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        isDead = true;
         PlayerStats.money += worth;
         
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);

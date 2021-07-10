@@ -5,8 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static bool GameIsOver = false;
-
     public GameObject gameOverUI;
+    public GameObject completeLevelUI;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -22,6 +22,12 @@ public class GameManager : MonoBehaviour
         GameIsOver = true;
         gameOverUI.SetActive(true);
         Debug.Log("Game Over");
+    }
+
+    public void WinLevel()
+    {
+        GameIsOver = true;
+        completeLevelUI.SetActive(true);
     }
 
     // Update is called once per frame
